@@ -4,8 +4,9 @@ import requests
 
 from utils.assertions import (
     assert_status_code,
-    assert_json_has_keys
+    assert_error_response
 )
+
 
 pytestmark = pytest.mark.negative
 
@@ -24,11 +25,14 @@ def test_should_return_409_when_creating_existing_folder(
 
     with allure.step("Try to create folder with the same name"):
         second_response = client.create_folder(unique_folder_name)
+        body = second_response.json()
 
     with allure.step("Check conflict response"):
-        assert first_response.status_code == 201
-        assert second_response.status_code == 409
-        assert second_response.json()["error"] == "DiskPathPointsToExistentDirectoryError"
+        assert_status_code(first_response, 201)
+        assert_status_code(second_response, 409)
+        assert_error_response(body)
+
+        assert body["error"] == "DiskPathPointsToExistentDirectoryError"
 
 
 @allure.feature("Negative API scenarios")
@@ -37,10 +41,13 @@ def test_should_return_409_when_creating_existing_folder(
 def test_should_return_404_for_non_existing_resource(client):
     with allure.step("Get metadata for non-existing resource"):
         response = client.get_resource_metadata("definitely_non_existing_folder")
+        body = response.json()
 
     with allure.step("Check not found response"):
-        assert response.status_code == 404
-        assert response.json()["error"] == "DiskNotFoundError"
+        assert_status_code(response, 404)
+        assert_error_response(body)
+
+        assert body["error"] == "DiskNotFoundError"
 
 
 @allure.feature("Negative API scenarios")
@@ -49,46 +56,41 @@ def test_should_return_404_for_non_existing_resource(client):
 def test_should_return_401_without_oauth_token():
     with allure.step("Send request without Authorization header"):
         response = requests.get("https://cloud-api.yandex.net/v1/disk")
+        body = response.json()
 
     with allure.step("Check unauthorized response"):
-        assert response.status_code == 401
-        assert response.json()["error"] == "UnauthorizedError"
+        assert_status_code(response, 401)
+        assert_error_response(body)
+
+        assert body["error"] == "UnauthorizedError"
 
 
 @allure.feature("Resource negative cases")
 @allure.story("Get resource metadata")
 @allure.title("Should return 404 for nonexistent resource")
 def test_get_nonexistent_resource_metadata(client):
-    response = client.get_resource_metadata("not_existing_folder_123456789")
-    body = response.json()
+    with allure.step("Get metadata for nonexistent resource"):
+        response = client.get_resource_metadata("not_existing_folder_123456789")
+        body = response.json()
 
-    assert response.status_code == 404
+    with allure.step("Validate not found response"):
+        assert_status_code(response, 404)
+        assert_error_response(body)
 
-    assert "error" in body
-    assert "description" in body
-    assert "message" in body
-
-    assert isinstance(body["error"], str)
-    assert isinstance(body["description"], str)
-    assert isinstance(body["message"], str)
-
-    assert body["error"] == "DiskNotFoundError"
+        assert body["error"] == "DiskNotFoundError"
 
 
 @allure.feature("Resource negative cases")
 @allure.story("Create folder")
 @allure.title("Should return 400 when path is missing")
 def test_should_return_400_when_create_folder_without_path(client):
-    response = client.create_folder(path="")
-    body = response.json()
+    with allure.step("Create folder without path"):
+        response = client.create_folder(path="")
+        body = response.json()
 
-    assert_status_code(response, 400)
-
-    assert_json_has_keys(body, ["error", "description", "message"])
-
-    assert isinstance(body["error"], str)
-    assert isinstance(body["description"], str)
-    assert isinstance(body["message"], str)
+    with allure.step("Validate bad request response"):
+        assert_status_code(response, 400)
+        assert_error_response(body)
 
 
 @allure.feature("Resource negative cases")
@@ -97,41 +99,41 @@ def test_should_return_400_when_create_folder_without_path(client):
 def test_should_return_409_when_parent_folder_does_not_exist(client, unique_folder_name):
     missing_parent_path = f"{unique_folder_name}/child"
 
-    response = client.create_folder(missing_parent_path)
-    body = response.json()
+    with allure.step("Create child folder without existing parent"):
+        response = client.create_folder(missing_parent_path)
+        body = response.json()
 
-    assert_status_code(response, 409)
+    with allure.step("Validate path does not exist response"):
+        assert_status_code(response, 409)
+        assert_error_response(body)
 
-    assert_json_has_keys(body, ["error", "description", "message"])
+        assert body["error"] == "DiskPathDoesntExistsError"
 
-    assert body["error"] == "DiskPathDoesntExistsError"
-
-    assert isinstance(body["description"], str)
-    assert isinstance(body["message"], str)
 
 @allure.feature("Resource negative cases")
 @allure.story("Delete resource")
 @allure.title("Should return 404 when deleting nonexistent resource")
 def test_should_return_404_when_deleting_nonexistent_resource(client, unique_folder_name):
-    response = client.delete_resource(
-        path=unique_folder_name,
-        permanently=True
-    )
-    body = response.json()
+    with allure.step("Delete nonexistent resource"):
+        response = client.delete_resource(
+            path=unique_folder_name,
+            permanently=True
+        )
+        body = response.json()
 
-    assert_status_code(response, 404)
-
-    assert_json_has_keys(body, ["error", "description", "message"])
-
-    assert isinstance(body["error"], str)
-    assert isinstance(body["description"], str)
-    assert isinstance(body["message"], str)
+    with allure.step("Validate not found response"):
+        assert_status_code(response, 404)
+        assert_error_response(body)
 
 
 @allure.feature("Resource negative cases")
 @allure.story("Delete resource")
 @allure.title("Should return 400 when deleting folder with md5 parameter")
-def test_should_return_400_when_deleting_folder_with_md5(client, unique_folder_name, created_folders):
+def test_should_return_400_when_deleting_folder_with_md5(
+        client,
+        unique_folder_name,
+        created_folders
+):
     with allure.step("Create folder"):
         create_response = client.create_folder(unique_folder_name)
         created_folders.append(unique_folder_name)
@@ -146,11 +148,6 @@ def test_should_return_400_when_deleting_folder_with_md5(client, unique_folder_n
         )
         body = response.json()
 
-    with allure.step("Validate error response"):
+    with allure.step("Validate bad request response"):
         assert_status_code(response, 400)
-
-        assert_json_has_keys(body, ["error", "description", "message"])
-
-        assert isinstance(body["error"], str)
-        assert isinstance(body["description"], str)
-        assert isinstance(body["message"], str)
+        assert_error_response(body)

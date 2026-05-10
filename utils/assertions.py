@@ -1,6 +1,6 @@
 import allure
 from jsonschema import validate
-
+from schemas.error_schema import ERROR_SCHEMA
 
 def attach_response(response):
     allure.attach(
@@ -45,3 +45,6 @@ def assert_schema(body, schema):
     )
 
     validate(instance=body, schema=schema)
+
+def assert_error_response(body):
+    assert_schema(body, ERROR_SCHEMA)
