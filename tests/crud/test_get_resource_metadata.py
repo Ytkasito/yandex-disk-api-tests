@@ -1,3 +1,8 @@
+import pytest
+
+
+pytestmark = pytest.mark.crud
+
 def test_get_created_folder_metadata(client, unique_folder_name, created_folders):
     client.create_folder(unique_folder_name)
     created_folders.append(unique_folder_name)

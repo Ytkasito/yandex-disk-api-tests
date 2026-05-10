@@ -1,3 +1,8 @@
+import pytest
+
+
+pytestmark = pytest.mark.lifecycle
+
 def test_restore_folder_from_trash(client, unique_folder_name, created_folders):
     restored_folder_name = f"{unique_folder_name}_restored"
 

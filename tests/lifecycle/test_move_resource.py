@@ -1,3 +1,8 @@
+import pytest
+
+
+pytestmark = pytest.mark.lifecycle
+
 def test_move_folder(client, unique_folder_name, created_folders):
     source_folder = f"{unique_folder_name}_source"
     moved_folder = f"{unique_folder_name}_moved"

@@ -1,3 +1,8 @@
+import pytest
+
+
+pytestmark = pytest.mark.lifecycle
+
 from utils.client import YandexDiskClient
 
 

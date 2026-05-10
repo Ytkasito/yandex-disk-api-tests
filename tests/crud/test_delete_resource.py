@@ -1,3 +1,8 @@
+import pytest
+
+
+pytestmark = pytest.mark.crud
+
 from utils.client import YandexDiskClient
 
 

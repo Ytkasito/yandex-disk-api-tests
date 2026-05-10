@@ -1,4 +1,9 @@
-﻿from utils.client import YandexDiskClient
+﻿import pytest
+
+
+pytestmark = pytest.mark.crud
+
+from utils.client import YandexDiskClient
 
 
 def test_get_disk_info():
