@@ -95,3 +95,34 @@ class YandexDiskClient:
                 "overwrite": str(overwrite).lower()
             }
         )
+    
+    def get_resource_metadata(
+        self,
+        path,
+        fields=None,
+        limit=None,
+        offset=None,
+        preview_crop=None,
+        preview_size=None,
+        sort=None
+    ):
+        params = {"path": path}
+
+        if fields is not None:
+            params["fields"] = fields
+        if limit is not None:
+            params["limit"] = limit
+        if offset is not None:
+            params["offset"] = offset
+        if preview_crop is not None:
+            params["preview_crop"] = str(preview_crop).lower()
+        if preview_size is not None:
+            params["preview_size"] = preview_size
+        if sort is not None:
+            params["sort"] = sort
+
+        return requests.get(
+            f"{self.base_url}/v1/disk/resources",
+            headers=self.headers,
+            params=params
+        )

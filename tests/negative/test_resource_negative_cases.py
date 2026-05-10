@@ -49,3 +49,23 @@ def test_should_return_401_without_oauth_token():
     with allure.step("Check unauthorized response"):
         assert response.status_code == 401
         assert response.json()["error"] == "UnauthorizedError"
+
+
+@allure.feature("Resource negative cases")
+@allure.story("Get resource metadata")
+@allure.title("Should return 404 for nonexistent resource")
+def test_get_nonexistent_resource_metadata(client):
+    response = client.get_resource_metadata("not_existing_folder_123456789")
+    body = response.json()
+
+    assert response.status_code == 404
+
+    assert "error" in body
+    assert "description" in body
+    assert "message" in body
+
+    assert isinstance(body["error"], str)
+    assert isinstance(body["description"], str)
+    assert isinstance(body["message"], str)
+
+    assert body["error"] == "DiskNotFoundError"
