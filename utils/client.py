@@ -193,15 +193,30 @@ class YandexDiskClient:
 
         return response
 
-    def move_resource(self, from_path, to_path, overwrite=False):
+    def move_resource(
+        self,
+        from_path,
+        to_path,
+        overwrite=None,
+        force_async=None,
+        fields=None
+    ):
+        params = {
+            "from": from_path,
+            "path": to_path
+        }
+
+        if overwrite is not None:
+            params["overwrite"] = str(overwrite).lower()
+        if force_async is not None:
+            params["force_async"] = str(force_async).lower()
+        if fields is not None:
+            params["fields"] = fields
+
         response = requests.post(
             f"{self.base_url}/v1/disk/resources/move",
             headers=self.headers,
-            params={
-                "from": from_path,
-                "path": to_path,
-                "overwrite": str(overwrite).lower()
-            }
+            params=params
         )
 
         self.log_response(response)
