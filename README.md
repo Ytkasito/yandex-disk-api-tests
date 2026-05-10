@@ -151,4 +151,4 @@ allure serve allure-results
 
 * OAuth token should be generated for a separate test account
 * Sensitive data is stored locally in the `.env` file
-* `.env` file is exclu
+* `.env` file is excluded from Git using `.gitignore`
