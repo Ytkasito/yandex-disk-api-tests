@@ -39,15 +39,30 @@ class YandexDiskClient:
             params=params
         )
 
-    def copy_resource(self, from_path, to_path):
+    def copy_resource(
+        self,
+        from_path,
+        path,
+        overwrite=None,
+        force_async=None,
+        fields=None
+    ):
+        params = {
+            "from": from_path,
+            "path": path
+        }
+
+        if overwrite is not None:
+            params["overwrite"] = str(overwrite).lower()
+        if force_async is not None:
+            params["force_async"] = str(force_async).lower()
+        if fields is not None:
+            params["fields"] = fields
 
         return requests.post(
             f"{self.base_url}/v1/disk/resources/copy",
             headers=self.headers,
-            params={
-                "from": from_path,
-                "path": to_path
-            }
+            params=params
         )
 
     def delete_resource(self, path, permanently=True):
