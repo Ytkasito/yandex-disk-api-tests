@@ -84,3 +84,14 @@ class YandexDiskClient:
             headers=self.headers,
             params={"path": path}
         )
+    
+    def move_resource(self, from_path, to_path, overwrite=False):
+        return requests.post(
+            f"{self.base_url}/v1/disk/resources/move",
+            headers=self.headers,
+            params={
+                "from": from_path,
+                "path": to_path,
+                "overwrite": str(overwrite).lower()
+            }
+        )
