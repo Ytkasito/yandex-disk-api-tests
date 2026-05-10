@@ -167,14 +167,21 @@ class YandexDiskClient:
 
         return response
 
-    def restore_from_trash(self, path, name=None, overwrite=False):
-        params = {
-            "path": path,
-            "overwrite": str(overwrite).lower()
-        }
+    def restore_from_trash(
+        self,
+        path,
+        name=None,
+        overwrite=None,
+        fields=None
+    ):
+        params = {"path": path}
 
-        if name:
+        if name is not None:
             params["name"] = name
+        if overwrite is not None:
+            params["overwrite"] = str(overwrite).lower()
+        if fields is not None:
+            params["fields"] = fields
 
         response = requests.put(
             f"{self.base_url}/v1/disk/trash/resources/restore",
