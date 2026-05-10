@@ -127,14 +127,29 @@ class YandexDiskClient:
 
         return response
 
-    def delete_resource(self, path, permanently=True):
+    def delete_resource(
+        self,
+        path,
+        permanently=None,
+        md5=None,
+        force_async=None,
+        fields=None
+    ):
+        params = {"path": path}
+
+        if permanently is not None:
+            params["permanently"] = str(permanently).lower()
+        if md5 is not None:
+            params["md5"] = md5
+        if force_async is not None:
+            params["force_async"] = str(force_async).lower()
+        if fields is not None:
+            params["fields"] = fields
+
         response = requests.delete(
             f"{self.base_url}/v1/disk/resources",
             headers=self.headers,
-            params={
-                "path": path,
-                "permanently": str(permanently).lower()
-            }
+            params=params
         )
 
         self.log_response(response)
