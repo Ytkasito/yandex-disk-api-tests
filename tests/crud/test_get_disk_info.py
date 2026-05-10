@@ -1,14 +1,22 @@
-﻿import pytest
+﻿import allure
+import pytest
 
 
 pytestmark = pytest.mark.crud
 
-from utils.client import YandexDiskClient
 
+@allure.feature("Disk information")
+@allure.story("Get disk info")
+@allure.title("Should return disk information")
+def test_get_disk_info(client):
+    with allure.step("Get disk information"):
+        response = client.get_disk_info()
 
-def test_get_disk_info():
-    client = YandexDiskClient()
+    with allure.step("Check response status and required fields"):
+        body = response.json()
 
-    response = client.get_disk_info()
-
-    assert response.status_code == 200
+        assert response.status_code == 200
+        assert "trash_size" in body
+        assert "total_space" in body
+        assert "used_space" in body
+        assert "system_folders" in body
