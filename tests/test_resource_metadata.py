@@ -1,5 +1,6 @@
-def test_get_created_folder_metadata(client, unique_folder_name):
+def test_get_created_folder_metadata(client, unique_folder_name, created_folders):
     client.create_folder(unique_folder_name)
+    created_folders.append(unique_folder_name)
 
     response = client.get_resource_metadata(unique_folder_name)
     body = response.json()
