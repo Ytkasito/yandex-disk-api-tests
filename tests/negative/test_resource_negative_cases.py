@@ -2,6 +2,10 @@ import allure
 import pytest
 import requests
 
+from utils.assertions import (
+    assert_status_code,
+    assert_json_has_keys
+)
 
 pytestmark = pytest.mark.negative
 
@@ -69,3 +73,39 @@ def test_get_nonexistent_resource_metadata(client):
     assert isinstance(body["message"], str)
 
     assert body["error"] == "DiskNotFoundError"
+
+
+@allure.feature("Resource negative cases")
+@allure.story("Create folder")
+@allure.title("Should return 400 when path is missing")
+def test_should_return_400_when_create_folder_without_path(client):
+    response = client.create_folder(path="")
+    body = response.json()
+
+    assert_status_code(response, 400)
+
+    assert_json_has_keys(body, ["error", "description", "message"])
+
+    assert isinstance(body["error"], str)
+    assert isinstance(body["description"], str)
+    assert isinstance(body["message"], str)
+
+
+@allure.feature("Resource negative cases")
+@allure.story("Create folder")
+@allure.title("Should return 409 when parent folder does not exist")
+def test_should_return_409_when_parent_folder_does_not_exist(client, unique_folder_name):
+    missing_parent_path = f"{unique_folder_name}/child"
+
+    response = client.create_folder(missing_parent_path)
+    body = response.json()
+
+    assert_status_code(response, 409)
+
+    assert_json_has_keys(body, ["error", "description", "message"])
+
+    assert body["error"] == "DiskPathDoesntExistsError"
+
+    assert isinstance(body["description"], str)
+    assert isinstance(body["message"], str)
+

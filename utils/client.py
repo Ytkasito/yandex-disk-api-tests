@@ -27,12 +27,16 @@ class YandexDiskClient:
             headers=self.headers
         )
 
-    def create_folder(self, path):
+    def create_folder(self, path, fields=None):
+        params = {"path": path}
+
+        if fields is not None:
+            params["fields"] = fields
 
         return requests.put(
             f"{self.base_url}/v1/disk/resources",
             headers=self.headers,
-            params={"path": path}
+            params=params
         )
 
     def copy_resource(self, from_path, to_path):
