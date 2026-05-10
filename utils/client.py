@@ -145,3 +145,9 @@ class YandexDiskClient:
             headers=self.headers,
             params=params
         )
+    
+    def get_operation_status(self, operation_href):
+        return requests.get(
+            operation_href,
+            headers=self.headers
+        )

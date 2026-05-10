@@ -8,6 +8,8 @@ from utils.assertions import (
     assert_schema
 )
 
+import time
+from schemas.operation_schema import OPERATION_SCHEMA
 
 pytestmark = pytest.mark.lifecycle
 
@@ -162,7 +164,7 @@ def test_copy_folder_with_overwrite_true(client, unique_folder_name, created_fol
 
 @allure.feature("Resource lifecycle")
 @allure.story("Copy resource")
-@allure.title("Should start async copy operation when force_async is true")
+@allure.title("Should start async copy operation and complete successfully")
 def test_copy_folder_with_force_async_true(client, unique_folder_name, created_folders):
     source_folder = unique_folder_name
     copied_folder = f"{unique_folder_name}_copy"
@@ -189,3 +191,32 @@ def test_copy_folder_with_force_async_true(client, unique_folder_name, created_f
         assert body["method"] == "GET"
         assert body["templated"] is False
         assert "/v1/disk/operations" in body["href"]
+
+    with allure.step("Wait until async operation is completed"):
+        operation_status = None
+
+        for _ in range(10):
+            operation_response = client.get_operation_status(body["href"])
+            operation_body = operation_response.json()
+
+            assert_status_code(operation_response, 200)
+            assert_schema(operation_body, OPERATION_SCHEMA)
+
+            operation_status = operation_body["status"]
+
+            if operation_status == "success":
+                break
+
+            assert operation_status != "failed"
+            time.sleep(1)
+
+        assert operation_status == "success"
+
+    with allure.step("Validate copied folder exists after async operation"):
+        metadata_response = client.get_resource_metadata(copied_folder)
+        metadata_body = metadata_response.json()
+
+        assert_status_code(metadata_response, 200)
+        assert metadata_body["name"] == copied_folder
+        assert metadata_body["type"] == "dir"
+        assert metadata_body["path"] == f"disk:/{copied_folder}"
