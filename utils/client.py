@@ -56,3 +56,10 @@ class YandexDiskClient:
                 "permanently": "true"
             }
         )
+    
+    def get_resource_metadata(self, path):
+        return requests.get(
+            f"{self.base_url}/v1/disk/resources",
+            headers=self.headers,
+            params={"path": path}
+        )
