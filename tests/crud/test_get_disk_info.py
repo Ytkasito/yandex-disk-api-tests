@@ -3,9 +3,11 @@ import pytest
 
 from utils.assertions import (
     assert_status_code,
-    assert_json_has_keys
+    assert_json_has_keys,
+    assert_schema
 )
 
+from schemas.disk_info_schema import DISK_INFO_SCHEMA
 
 pytestmark = pytest.mark.crud
 
@@ -20,6 +22,9 @@ def test_get_disk_info(client):
 
     with allure.step("Validate status code"):
         assert_status_code(response, 200)
+
+    with allure.step("Validate response schema"):
+        assert_schema(body, DISK_INFO_SCHEMA)
 
     with allure.step("Validate required root fields"):
         assert_json_has_keys(body, [
