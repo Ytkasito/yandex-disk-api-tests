@@ -1,88 +1,134 @@
-# Yandex Disk API Tests
+# Автотесты API Яндекс.Диска
 
-API test automation project for Yandex Disk REST API.
-
-## Documentation
-
-* API documentation: [https://yandex.ru/dev/disk/api/concepts/about-docpage/](https://yandex.ru/dev/disk/api/concepts/about-docpage/)
-* Base URL: [https://cloud-api.yandex.net](https://cloud-api.yandex.net)
+Проект автоматизированного тестирования REST API Яндекс.Диска с использованием Python, Pytest, Requests и Allure Report.
 
 ---
 
-## Tech Stack
+# Стек технологий
 
-* Python 3
-* Pytest
-* Requests
-* Allure Report
-* python-dotenv
+- Python 3
+- Pytest
+- Requests
+- Allure Report
+- JSON Schema
+- Git
+- GitHub Actions
 
 ---
 
-## Project Structure
+# Структура проекта
 
 ```text
-tests/
-├── crud/
-│   ├── test_create_resource.py
-│   ├── test_delete_resource.py
-│   ├── test_get_disk_info.py
-│   └── test_get_resource_metadata.py
+yandex-disk-api-tests
 │
-├── lifecycle/
-│   ├── test_copy_resource.py
-│   ├── test_move_resource.py
-│   └── test_trash_restore.py
+├── .github
+│   └── workflows
+│       └── tests.yml
 │
-├── negative/
-│   └── test_resource_negative_cases.py
+├── schemas
+│   ├── disk_info_schema.py
+│   ├── error_schema.py
+│   ├── link_schema.py
+│   ├── operation_schema.py
+│   └── resource_schema.py
 │
-└── conftest.py
-
-utils/
-└── client.py
+├── test_data
+│   └── hello.txt
+│
+├── tests
+│   ├── crud
+│   │   ├── test_create_resource.py
+│   │   ├── test_delete_resource.py
+│   │   ├── test_get_disk_info.py
+│   │   ├── test_get_resource_metadata.py
+│   │   └── test_update_resource_metadata.py
+│   │
+│   ├── lifecycle
+│   │   ├── test_copy_resource.py
+│   │   ├── test_download_file.py
+│   │   ├── test_move_resource.py
+│   │   ├── test_publish_resource.py
+│   │   ├── test_restore_from_trash.py
+│   │   └── test_upload_file.py
+│   │
+│   └── negative
+│       └── test_resource_negative_cases.py
+│
+├── utils
+│   ├── assertions.py
+│   ├── client.py
+│   └── logger.py
+│
+├── .env.example
+├── .gitignore
+├── pytest.ini
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## Covered Test Scenarios
+# Реализованные проверки
 
-### CRUD Tests
+## CRUD операции
+- Создание папок
+- Получение метаданных ресурса
+- Удаление ресурсов
+- Загрузка файлов
+- Скачивание файлов
+- Обновление пользовательских метаданных
 
-* Get disk information
-* Create folder
-* Get resource metadata
-* Delete folder
+## Lifecycle сценарии
+- Копирование ресурсов
+- Перемещение ресурсов
+- Восстановление из корзины
+- Публикация и снятие публичного доступа
 
-### Lifecycle Tests
-
-* Copy folder
-* Move folder
-* Restore folder from trash
-
-### Negative Tests
-
-* Create existing folder
-* Get non-existing resource
-* Request without OAuth token
+## Негативные сценарии
+- Запросы без авторизации
+- Работа с несуществующими ресурсами
+- Создание уже существующих ресурсов
+- Некорректные параметры запросов
+- Ошибки удаления ресурсов
 
 ---
 
-## Installation
+# Возможности проекта
 
-### Create virtual environment
+- Проверка status code
+- Проверка структуры JSON-ответов
+- JSON Schema validation
+- Логирование запросов и ответов
+- Allure-отчеты
+- Автоматическая очистка тестовых данных
+- Работа с асинхронными операциями
+- Кастомные assertions
+
+---
+
+# Установка проекта
+
+Клонирование репозитория:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/yandex-disk-api-tests.git
+```
+
+Создание виртуального окружения:
 
 ```bash
 python -m venv venv
 ```
 
-### Activate virtual environment
+Активация виртуального окружения:
+
+## Windows
 
 ```bash
 venv\Scripts\activate
 ```
 
-### Install dependencies
+Установка зависимостей:
 
 ```bash
 pip install -r requirements.txt
@@ -90,56 +136,38 @@ pip install -r requirements.txt
 
 ---
 
-## Environment Variables
+# Настройка переменных окружения
 
-Create `.env` file in the project root:
+Создать файл `.env`:
 
 ```env
-TOKEN=your_oauth_token
 BASE_URL=https://cloud-api.yandex.net
+TOKEN=your_oauth_token
 ```
-
-`.env` file is ignored by Git and should not be pushed to GitHub.
 
 ---
 
-## Running Tests
+# Запуск тестов
 
-### Run all tests
+Запуск всех тестов:
 
 ```bash
 pytest -v
 ```
 
-### Run CRUD tests
+Запуск отдельных групп тестов:
 
 ```bash
-pytest -m crud
-```
-
-### Run lifecycle tests
-
-```bash
-pytest -m lifecycle
-```
-
-### Run negative tests
-
-```bash
-pytest -m negative
+pytest tests/crud -v
+pytest tests/lifecycle -v
+pytest tests/negative -v
 ```
 
 ---
 
-## Allure Report
+# Allure Report
 
-### Generate Allure results
-
-```bash
-pytest --alluredir=allure-results
-```
-
-### Open Allure report
+Генерация отчета:
 
 ```bash
 allure serve allure-results
@@ -147,8 +175,3 @@ allure serve allure-results
 
 ---
 
-## Notes
-
-* OAuth token should be generated for a separate test account
-* Sensitive data is stored locally in the `.env` file
-* `.env` file is excluded from Git using `.gitignore`
