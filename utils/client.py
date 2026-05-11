@@ -279,3 +279,39 @@ class YandexDiskClient:
         self.log_response(response)
 
         return response
+    
+
+    def publish_resource(self, path, allow_address_access=None, fields=None):
+        params = {"path": path}
+
+        if allow_address_access is not None:
+            params["allow_address_access"] = str(allow_address_access).lower()
+        if fields is not None:
+            params["fields"] = fields
+
+        response = requests.put(
+            f"{self.base_url}/v1/disk/resources/publish",
+            headers=self.headers,
+            params=params
+        )
+
+        self.log_response(response)
+
+        return response
+
+
+    def unpublish_resource(self, path, fields=None):
+        params = {"path": path}
+
+        if fields is not None:
+            params["fields"] = fields
+
+        response = requests.put(
+            f"{self.base_url}/v1/disk/resources/unpublish",
+            headers=self.headers,
+            params=params
+        )
+
+        self.log_response(response)
+
+        return response
