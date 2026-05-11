@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![Pytest](https://img.shields.io/badge/Pytest-9.0.3-blue)
 ![Allure](https://img.shields.io/badge/Allure-2.16.0-orange)
-![CI](https://github.com/YOUR_USERNAME/yandex-disk-api-tests/actions/workflows/api-tests.yml/badge.svg)
+![CI](https://github.com/Ytkasito/yandex-disk-api-tests/actions/workflows/api-tests.yml/badge.svg)
 
 ---
 
@@ -91,10 +91,10 @@ yandex-disk-api-tests
 - Работа с асинхронными операциями
 
 ### Негативные сценарии
+- Некорректные параметры запросов (400)
 - Запросы без авторизации (401)
 - Работа с несуществующими ресурсами (404)
 - Создание уже существующих ресурсов (409)
-- Некорректные параметры запросов (400)
 - Ошибки удаления ресурсов
 
 ---
