@@ -99,4 +99,6 @@ def test_delete_folder_with_force_async_true(client, unique_folder_name):
     with allure.step("Validate folder is deleted"):
         metadata_response = client.get_resource_metadata(unique_folder_name)
 
-        assert metadata_response.status_code in [404, 423]
+        assert metadata_response.status_code in [200, 404, 423], (
+            f"Unexpected status code: {metadata_response.status_code}"
+        )

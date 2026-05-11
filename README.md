@@ -104,7 +104,7 @@ yandex-disk-api-tests
 ### 1. Клонирование репозитория
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/yandex-disk-api-tests.git
+git clone https://github.com/Ytkasito/yandex-disk-api-tests.git
 cd yandex-disk-api-tests
 ```
 
