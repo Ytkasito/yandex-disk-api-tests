@@ -156,11 +156,18 @@ class YandexDiskClient:
 
         return response
 
-    def get_trash_resource_metadata(self, path="/"):
+    def get_trash_resource_metadata(self, path="/", limit=None, offset=None):
+        params = {"path": path}
+
+        if limit is not None:
+            params["limit"] = limit
+        if offset is not None:
+            params["offset"] = offset
+
         response = requests.get(
             f"{self.base_url}/v1/disk/trash/resources",
             headers=self.headers,
-            params={"path": path}
+            params=params
         )
 
         self.log_response(response)

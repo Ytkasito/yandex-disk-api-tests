@@ -1,5 +1,6 @@
 import allure
 import pytest
+import time
 
 from schemas.link_schema import LINK_SCHEMA
 from utils.assertions import (
@@ -12,15 +13,21 @@ from utils.assertions import (
 pytestmark = pytest.mark.lifecycle
 
 
-def get_trash_path_by_name(client, resource_name):
-    trash_response = client.get_trash_resource_metadata("/")
-    trash_body = trash_response.json()
+def get_trash_path_by_name(client, resource_name, attempts=10, delay=1):
+    for _ in range(attempts):
+        trash_response = client.get_trash_resource_metadata(
+            path="/",
+            limit=1000
+        )
+        trash_body = trash_response.json()
 
-    assert_status_code(trash_response, 200)
+        assert_status_code(trash_response, 200)
 
-    for item in trash_body["_embedded"]["items"]:
-        if item["name"] == resource_name:
-            return item["path"].replace("trash:", "")
+        for item in trash_body["_embedded"]["items"]:
+            if item["name"] == resource_name:
+                return item["path"].replace("trash:", "")
+
+        time.sleep(delay)
 
     raise AssertionError(f"Resource '{resource_name}' not found in trash")
 
