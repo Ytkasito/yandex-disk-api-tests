@@ -222,3 +222,33 @@ class YandexDiskClient:
         self.log_response(response)
 
         return response
+    
+    def get_upload_link(self, path, overwrite=False, fields=None):
+        params = {
+            "path": path,
+            "overwrite": str(overwrite).lower()
+        }
+
+        if fields is not None:
+            params["fields"] = fields
+
+        response = requests.get(
+            f"{self.base_url}/v1/disk/resources/upload",
+            headers=self.headers,
+            params=params
+        )
+
+        self.log_response(response)
+
+        return response
+    
+    def upload_file(self, upload_url, file_path):
+        with open(file_path, "rb") as file:
+            response = requests.put(
+                upload_url,
+                files={"file": file}
+            )
+
+        self.log_response(response)
+
+        return response
