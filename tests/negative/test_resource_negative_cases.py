@@ -1,3 +1,5 @@
+import os
+
 import allure
 import pytest
 import requests
@@ -54,8 +56,10 @@ def test_should_return_404_for_non_existing_resource(client):
 @allure.story("Unauthorized request")
 @allure.title("Should return 401 without OAuth token")
 def test_should_return_401_without_oauth_token():
+    base_url = os.getenv("BASE_URL", "https://cloud-api.yandex.net")
+
     with allure.step("Send request without Authorization header"):
-        response = requests.get("https://cloud-api.yandex.net/v1/disk")
+        response = requests.get(f"{base_url}/v1/disk", timeout=10)
         body = response.json()
 
     with allure.step("Check unauthorized response"):
@@ -63,21 +67,6 @@ def test_should_return_401_without_oauth_token():
         assert_error_response(body)
 
         assert body["error"] == "UnauthorizedError"
-
-
-@allure.feature("Resource negative cases")
-@allure.story("Get resource metadata")
-@allure.title("Should return 404 for nonexistent resource")
-def test_get_nonexistent_resource_metadata(client):
-    with allure.step("Get metadata for nonexistent resource"):
-        response = client.get_resource_metadata("not_existing_folder_123456789")
-        body = response.json()
-
-    with allure.step("Validate not found response"):
-        assert_status_code(response, 404)
-        assert_error_response(body)
-
-        assert body["error"] == "DiskNotFoundError"
 
 
 @allure.feature("Resource negative cases")
