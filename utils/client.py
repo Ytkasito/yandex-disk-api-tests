@@ -315,3 +315,21 @@ class YandexDiskClient:
         self.log_response(response)
 
         return response
+    
+
+    def update_resource_custom_properties(self, path, custom_properties, fields=None):
+        params = {"path": path}
+
+        if fields is not None:
+            params["fields"] = fields
+
+        response = requests.patch(
+            f"{self.base_url}/v1/disk/resources",
+            headers=self.headers,
+            params=params,
+            json={"custom_properties": custom_properties}
+        )
+
+        self.log_response(response)
+
+        return response
