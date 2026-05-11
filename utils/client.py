@@ -252,3 +252,30 @@ class YandexDiskClient:
         self.log_response(response)
 
         return response
+    
+    def get_download_link(self, path, fields=None):
+        params = {"path": path}
+
+        if fields is not None:
+            params["fields"] = fields
+
+        response = requests.get(
+            f"{self.base_url}/v1/disk/resources/download",
+            headers=self.headers,
+            params=params
+        )
+
+        self.log_response(response)
+
+        return response
+
+
+    def download_file(self, download_url):
+        response = requests.get(
+            download_url,
+            headers=self.headers
+        )
+
+        self.log_response(response)
+
+        return response
