@@ -10,10 +10,10 @@ from utils.assertions import (
 )
 
 
-pytestmark = pytest.mark.lifecycle
+pytestmark = pytest.mark.crud
 
 
-@allure.feature("Resource lifecycle")
+@allure.feature("CRUD operations")
 @allure.story("Delete resource")
 @allure.title("Should delete empty folder permanently")
 def test_delete_empty_folder_permanently(client, unique_folder_name):
@@ -39,7 +39,7 @@ def test_delete_empty_folder_permanently(client, unique_folder_name):
         assert_json_has_keys(body, ["error", "description", "message"])
 
 
-@allure.feature("Resource lifecycle")
+@allure.feature("CRUD operations")
 @allure.story("Delete resource")
 @allure.title("Should move empty folder to trash by default")
 def test_delete_empty_folder_to_trash_by_default(client, unique_folder_name):
@@ -62,7 +62,7 @@ def test_delete_empty_folder_to_trash_by_default(client, unique_folder_name):
         assert_json_has_keys(body, ["error", "description", "message"])
 
 
-@allure.feature("Resource lifecycle")
+@allure.feature("CRUD operations")
 @allure.story("Delete resource")
 @allure.title("Should start async delete operation when force_async is true")
 def test_delete_folder_with_force_async_true(client, unique_folder_name):
