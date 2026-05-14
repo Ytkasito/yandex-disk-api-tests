@@ -2,8 +2,6 @@
 
 # Автотесты REST API Яндекс.Диска
 
-<div align="center">
-
 # Yandex Disk API Tests
 
 Полноценный framework для автоматизированного тестирования REST API сервиса Яндекс.Диск.
