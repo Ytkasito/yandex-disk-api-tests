@@ -4,6 +4,6 @@ LINK_SCHEMA = {
     "properties": {
         "href": {"type": "string"},
         "method": {"type": "string"},
-        "templated": {"type": "boolean"}
-    }
+        "templated": {"type": "boolean"},
+    },
 }

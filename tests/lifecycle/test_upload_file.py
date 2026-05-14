@@ -4,11 +4,7 @@ import allure
 import pytest
 
 from schemas.link_schema import LINK_SCHEMA
-from utils.assertions import (
-    assert_status_code,
-    assert_schema
-)
-
+from utils.assertions import assert_status_code, assert_schema
 
 pytestmark = pytest.mark.lifecycle
 
@@ -19,15 +15,11 @@ pytestmark = pytest.mark.lifecycle
 def test_upload_file_to_disk(client):
     disk_file_path = "autotest_upload_file.txt"
 
-    local_file_path = os.path.join(
-        "test_data",
-        "hello.txt"
-    )
+    local_file_path = os.path.join("test_data", "hello.txt")
 
     with allure.step("Get upload link"):
         upload_link_response = client.get_upload_link(
-            path=disk_file_path,
-            overwrite=True
+            path=disk_file_path, overwrite=True
         )
 
         upload_link_body = upload_link_response.json()
@@ -41,17 +33,14 @@ def test_upload_file_to_disk(client):
 
     with allure.step("Upload file using upload URL"):
         upload_response = client.upload_file(
-            upload_url=upload_link_body["href"],
-            file_path=local_file_path
+            upload_url=upload_link_body["href"], file_path=local_file_path
         )
 
     with allure.step("Validate upload response"):
         assert upload_response.status_code in [201, 202]
 
     with allure.step("Validate uploaded file metadata"):
-        metadata_response = client.get_resource_metadata(
-            disk_file_path
-        )
+        metadata_response = client.get_resource_metadata(disk_file_path)
 
         metadata_body = metadata_response.json()
 
@@ -60,18 +49,13 @@ def test_upload_file_to_disk(client):
         assert metadata_body["name"] == "autotest_upload_file.txt"
         assert metadata_body["type"] == "file"
 
-        assert metadata_body["path"] == (
-            "disk:/autotest_upload_file.txt"
-        )
+        assert metadata_body["path"] == ("disk:/autotest_upload_file.txt")
 
         assert metadata_body["mime_type"] == "text/plain"
 
         assert metadata_body["size"] > 0
 
     with allure.step("Delete uploaded file"):
-        delete_response = client.delete_resource(
-            path=disk_file_path,
-            permanently=True
-        )
+        delete_response = client.delete_resource(path=disk_file_path, permanently=True)
 
         assert_status_code(delete_response, 204)

@@ -3,12 +3,7 @@ import pytest
 
 from schemas.link_schema import LINK_SCHEMA
 from schemas.operation_schema import OPERATION_SCHEMA
-from utils.assertions import (
-    assert_status_code,
-    assert_json_has_keys,
-    assert_schema
-)
-
+from utils.assertions import assert_status_code, assert_json_has_keys, assert_schema
 
 pytestmark = pytest.mark.crud
 
@@ -24,8 +19,7 @@ def test_delete_empty_folder_permanently(client, unique_folder_name):
 
     with allure.step("Delete folder permanently"):
         delete_response = client.delete_resource(
-            path=unique_folder_name,
-            permanently=True
+            path=unique_folder_name, permanently=True
         )
 
         assert_status_code(delete_response, 204)
@@ -73,9 +67,7 @@ def test_delete_folder_with_force_async_true(client, unique_folder_name):
 
     with allure.step("Delete folder with force_async true"):
         delete_response = client.delete_resource(
-            path=unique_folder_name,
-            permanently=True,
-            force_async=True
+            path=unique_folder_name, permanently=True, force_async=True
         )
         body = delete_response.json()
 
@@ -99,6 +91,8 @@ def test_delete_folder_with_force_async_true(client, unique_folder_name):
     with allure.step("Validate folder is deleted"):
         metadata_response = client.get_resource_metadata(unique_folder_name)
 
-        assert metadata_response.status_code in [200, 404, 423], (
-            f"Unexpected status code: {metadata_response.status_code}"
-        )
+        assert metadata_response.status_code in [
+            200,
+            404,
+            423,
+        ], f"Unexpected status code: {metadata_response.status_code}"

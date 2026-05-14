@@ -2,12 +2,7 @@ import allure
 import pytest
 
 from schemas.link_schema import LINK_SCHEMA
-from utils.assertions import (
-    assert_status_code,
-    assert_schema,
-    assert_json_has_keys
-)
-
+from utils.assertions import assert_status_code, assert_schema, assert_json_has_keys
 
 pytestmark = pytest.mark.lifecycle
 

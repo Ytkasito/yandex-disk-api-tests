@@ -2,11 +2,7 @@ import allure
 import pytest
 
 from schemas.link_schema import LINK_SCHEMA
-from utils.assertions import (
-    assert_status_code,
-    assert_json_has_keys,
-    assert_schema
-)
+from utils.assertions import assert_status_code, assert_json_has_keys, assert_schema
 
 import time
 from schemas.operation_schema import OPERATION_SCHEMA
@@ -30,8 +26,7 @@ def test_copy_empty_folder(client, unique_folder_name, created_folders):
 
     with allure.step("Copy source folder"):
         copy_response = client.copy_resource(
-            from_path=source_folder,
-            path=copied_folder
+            from_path=source_folder, path=copied_folder
         )
         body = copy_response.json()
 
@@ -71,9 +66,7 @@ def test_copy_folder_with_fields_filter(client, unique_folder_name, created_fold
 
     with allure.step("Copy source folder with fields filter"):
         copy_response = client.copy_resource(
-            from_path=source_folder,
-            path=copied_folder,
-            fields="href,method"
+            from_path=source_folder, path=copied_folder, fields="href,method"
         )
         body = copy_response.json()
 
@@ -88,8 +81,12 @@ def test_copy_folder_with_fields_filter(client, unique_folder_name, created_fold
 
 @allure.feature("Resource lifecycle")
 @allure.story("Copy resource")
-@allure.title("Should return 409 when copied resource already exists and overwrite is false")
-def test_copy_folder_without_overwrite_to_existing_path(client, unique_folder_name, created_folders):
+@allure.title(
+    "Should return 409 when copied resource already exists and overwrite is false"
+)
+def test_copy_folder_without_overwrite_to_existing_path(
+    client, unique_folder_name, created_folders
+):
     source_folder = unique_folder_name
     copied_folder = f"{unique_folder_name}_copy"
 
@@ -107,9 +104,7 @@ def test_copy_folder_without_overwrite_to_existing_path(client, unique_folder_na
 
     with allure.step("Try to copy without overwrite"):
         copy_response = client.copy_resource(
-            from_path=source_folder,
-            path=copied_folder,
-            overwrite=False
+            from_path=source_folder, path=copied_folder, overwrite=False
         )
         body = copy_response.json()
 
@@ -143,9 +138,7 @@ def test_copy_folder_with_overwrite_true(client, unique_folder_name, created_fol
 
     with allure.step("Copy with overwrite true"):
         copy_response = client.copy_resource(
-            from_path=source_folder,
-            path=copied_folder,
-            overwrite=True
+            from_path=source_folder, path=copied_folder, overwrite=True
         )
         body = copy_response.json()
 
@@ -178,9 +171,7 @@ def test_copy_folder_with_force_async_true(client, unique_folder_name, created_f
 
     with allure.step("Copy with force_async true"):
         copy_response = client.copy_resource(
-            from_path=source_folder,
-            path=copied_folder,
-            force_async=True
+            from_path=source_folder, path=copied_folder, force_async=True
         )
         body = copy_response.json()
 

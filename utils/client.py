@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 
 from utils.logger import logger
 
-
 load_dotenv()
 
 DEFAULT_TIMEOUT = 10
@@ -18,11 +17,13 @@ class YandexDiskClient:
         self.timeout = DEFAULT_TIMEOUT
 
         self.session = requests.Session()
-        self.session.headers.update({
-            "Authorization": f"OAuth {os.getenv('TOKEN')}",
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        })
+        self.session.headers.update(
+            {
+                "Authorization": f"OAuth {os.getenv('TOKEN')}",
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            }
+        )
 
     def log_response(self, response):
         logger.info(f"REQUEST: {response.request.method} {response.url}")
@@ -30,10 +31,7 @@ class YandexDiskClient:
         logger.info(f"RESPONSE BODY: {response.text}")
 
     def get_disk_info(self):
-        response = self.session.get(
-            f"{self.base_url}/v1/disk",
-            timeout=self.timeout
-        )
+        response = self.session.get(f"{self.base_url}/v1/disk", timeout=self.timeout)
         self.log_response(response)
         return response
 
@@ -43,9 +41,7 @@ class YandexDiskClient:
             params["fields"] = fields
 
         response = self.session.put(
-            f"{self.base_url}/v1/disk/resources",
-            params=params,
-            timeout=self.timeout
+            f"{self.base_url}/v1/disk/resources", params=params, timeout=self.timeout
         )
         self.log_response(response)
         return response
@@ -58,7 +54,7 @@ class YandexDiskClient:
         offset=None,
         preview_crop=None,
         preview_size=None,
-        sort=None
+        sort=None,
     ):
         params = {"path": path}
 
@@ -76,14 +72,14 @@ class YandexDiskClient:
             params["sort"] = sort
 
         response = self.session.get(
-            f"{self.base_url}/v1/disk/resources",
-            params=params,
-            timeout=self.timeout
+            f"{self.base_url}/v1/disk/resources", params=params, timeout=self.timeout
         )
         self.log_response(response)
         return response
 
-    def copy_resource(self, from_path, path, overwrite=None, force_async=None, fields=None):
+    def copy_resource(
+        self, from_path, path, overwrite=None, force_async=None, fields=None
+    ):
         params = {"from": from_path, "path": path}
 
         if overwrite is not None:
@@ -96,20 +92,19 @@ class YandexDiskClient:
         response = self.session.post(
             f"{self.base_url}/v1/disk/resources/copy",
             params=params,
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         self.log_response(response)
         return response
 
     def get_operation_status(self, operation_href):
-        response = self.session.get(
-            operation_href,
-            timeout=self.timeout
-        )
+        response = self.session.get(operation_href, timeout=self.timeout)
         self.log_response(response)
         return response
 
-    def delete_resource(self, path, permanently=None, md5=None, force_async=None, fields=None):
+    def delete_resource(
+        self, path, permanently=None, md5=None, force_async=None, fields=None
+    ):
         params = {"path": path}
 
         if permanently is not None:
@@ -122,9 +117,7 @@ class YandexDiskClient:
             params["fields"] = fields
 
         response = self.session.delete(
-            f"{self.base_url}/v1/disk/resources",
-            params=params,
-            timeout=self.timeout
+            f"{self.base_url}/v1/disk/resources", params=params, timeout=self.timeout
         )
         self.log_response(response)
         return response
@@ -140,7 +133,7 @@ class YandexDiskClient:
         response = self.session.get(
             f"{self.base_url}/v1/disk/trash/resources",
             params=params,
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         self.log_response(response)
         return response
@@ -158,12 +151,14 @@ class YandexDiskClient:
         response = self.session.put(
             f"{self.base_url}/v1/disk/trash/resources/restore",
             params=params,
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         self.log_response(response)
         return response
 
-    def move_resource(self, from_path, to_path, overwrite=None, force_async=None, fields=None):
+    def move_resource(
+        self, from_path, to_path, overwrite=None, force_async=None, fields=None
+    ):
         params = {"from": from_path, "path": to_path}
 
         if overwrite is not None:
@@ -176,23 +171,20 @@ class YandexDiskClient:
         response = self.session.post(
             f"{self.base_url}/v1/disk/resources/move",
             params=params,
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         self.log_response(response)
         return response
 
     def get_upload_link(self, path, overwrite=False, fields=None):
-        params = {
-            "path": path,
-            "overwrite": str(overwrite).lower()
-        }
+        params = {"path": path, "overwrite": str(overwrite).lower()}
         if fields is not None:
             params["fields"] = fields
 
         response = self.session.get(
             f"{self.base_url}/v1/disk/resources/upload",
             params=params,
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         self.log_response(response)
         return response
@@ -200,9 +192,7 @@ class YandexDiskClient:
     def upload_file(self, upload_url, file_path):
         with open(file_path, "rb") as file:
             response = requests.put(
-                upload_url,
-                files={"file": file},
-                timeout=self.timeout
+                upload_url, files={"file": file}, timeout=self.timeout
             )
         self.log_response(response)
         return response
@@ -215,16 +205,13 @@ class YandexDiskClient:
         response = self.session.get(
             f"{self.base_url}/v1/disk/resources/download",
             params=params,
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         self.log_response(response)
         return response
 
     def download_file(self, download_url):
-        response = self.session.get(
-            download_url,
-            timeout=self.timeout
-        )
+        response = self.session.get(download_url, timeout=self.timeout)
         self.log_response(response)
         return response
 
@@ -239,7 +226,7 @@ class YandexDiskClient:
         response = self.session.put(
             f"{self.base_url}/v1/disk/resources/publish",
             params=params,
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         self.log_response(response)
         return response
@@ -252,7 +239,7 @@ class YandexDiskClient:
         response = self.session.put(
             f"{self.base_url}/v1/disk/resources/unpublish",
             params=params,
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         self.log_response(response)
         return response
@@ -266,7 +253,7 @@ class YandexDiskClient:
             f"{self.base_url}/v1/disk/resources",
             params=params,
             json={"custom_properties": custom_properties},
-            timeout=self.timeout
+            timeout=self.timeout,
         )
         self.log_response(response)
         return response

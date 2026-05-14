@@ -3,12 +3,7 @@ import pytest
 
 from schemas.link_schema import LINK_SCHEMA
 from schemas.operation_schema import OPERATION_SCHEMA
-from utils.assertions import (
-    assert_status_code,
-    assert_json_has_keys,
-    assert_schema
-)
-
+from utils.assertions import assert_status_code, assert_json_has_keys, assert_schema
 
 pytestmark = pytest.mark.lifecycle
 
@@ -26,8 +21,7 @@ def test_move_empty_folder(client, unique_folder_name, created_folders):
 
     with allure.step("Move source folder"):
         move_response = client.move_resource(
-            from_path=source_folder,
-            to_path=moved_folder
+            from_path=source_folder, to_path=moved_folder
         )
         body = move_response.json()
         created_folders.append(moved_folder)
@@ -71,9 +65,7 @@ def test_move_folder_with_fields_filter(client, unique_folder_name, created_fold
 
     with allure.step("Move source folder with fields filter"):
         move_response = client.move_resource(
-            from_path=source_folder,
-            to_path=moved_folder,
-            fields="href,method"
+            from_path=source_folder, to_path=moved_folder, fields="href,method"
         )
         body = move_response.json()
         created_folders.append(moved_folder)
@@ -90,7 +82,9 @@ def test_move_folder_with_fields_filter(client, unique_folder_name, created_fold
 @allure.feature("Resource lifecycle")
 @allure.story("Move resource")
 @allure.title("Should return 409 when target already exists and overwrite is false")
-def test_move_folder_without_overwrite_to_existing_path(client, unique_folder_name, created_folders):
+def test_move_folder_without_overwrite_to_existing_path(
+    client, unique_folder_name, created_folders
+):
     source_folder = unique_folder_name
     target_folder = f"{unique_folder_name}_target"
 
@@ -106,9 +100,7 @@ def test_move_folder_without_overwrite_to_existing_path(client, unique_folder_na
 
     with allure.step("Try to move without overwrite"):
         move_response = client.move_resource(
-            from_path=source_folder,
-            to_path=target_folder,
-            overwrite=False
+            from_path=source_folder, to_path=target_folder, overwrite=False
         )
         body = move_response.json()
 
@@ -139,9 +131,7 @@ def test_move_folder_with_overwrite_true(client, unique_folder_name, created_fol
 
     with allure.step("Move with overwrite true"):
         move_response = client.move_resource(
-            from_path=source_folder,
-            to_path=target_folder,
-            overwrite=True
+            from_path=source_folder, to_path=target_folder, overwrite=True
         )
         body = move_response.json()
 
@@ -175,9 +165,7 @@ def test_move_folder_with_force_async_true(client, unique_folder_name, created_f
 
     with allure.step("Move with force_async true"):
         move_response = client.move_resource(
-            from_path=source_folder,
-            to_path=moved_folder,
-            force_async=True
+            from_path=source_folder, to_path=moved_folder, force_async=True
         )
         body = move_response.json()
         created_folders.append(moved_folder)

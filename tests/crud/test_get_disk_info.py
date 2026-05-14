@@ -1,11 +1,7 @@
 ﻿import allure
 import pytest
 
-from utils.assertions import (
-    assert_status_code,
-    assert_json_has_keys,
-    assert_schema
-)
+from utils.assertions import assert_status_code, assert_json_has_keys, assert_schema
 
 from schemas.disk_info_schema import DISK_INFO_SCHEMA
 
@@ -27,12 +23,9 @@ def test_get_disk_info(client):
         assert_schema(body, DISK_INFO_SCHEMA)
 
     with allure.step("Validate required root fields"):
-        assert_json_has_keys(body, [
-            "trash_size",
-            "total_space",
-            "used_space",
-            "system_folders"
-        ])
+        assert_json_has_keys(
+            body, ["trash_size", "total_space", "used_space", "system_folders"]
+        )
 
     with allure.step("Validate field types"):
         assert isinstance(body["trash_size"], int)

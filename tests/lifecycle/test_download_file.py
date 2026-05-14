@@ -4,11 +4,7 @@ import allure
 import pytest
 
 from schemas.link_schema import LINK_SCHEMA
-from utils.assertions import (
-    assert_status_code,
-    assert_schema
-)
-
+from utils.assertions import assert_status_code, assert_schema
 
 pytestmark = pytest.mark.lifecycle
 
@@ -26,8 +22,7 @@ def test_download_uploaded_file_from_disk(client):
 
     with allure.step("Get upload link"):
         upload_link_response = client.get_upload_link(
-            path=disk_file_path,
-            overwrite=True
+            path=disk_file_path, overwrite=True
         )
         upload_link_body = upload_link_response.json()
 
@@ -36,16 +31,13 @@ def test_download_uploaded_file_from_disk(client):
 
     with allure.step("Upload file"):
         upload_response = client.upload_file(
-            upload_url=upload_link_body["href"],
-            file_path=local_file_path
+            upload_url=upload_link_body["href"], file_path=local_file_path
         )
 
         assert upload_response.status_code in [201, 202]
 
     with allure.step("Get download link"):
-        download_link_response = client.get_download_link(
-            path=disk_file_path
-        )
+        download_link_response = client.get_download_link(path=disk_file_path)
         download_link_body = download_link_response.json()
 
         assert_status_code(download_link_response, 200)
@@ -65,9 +57,6 @@ def test_download_uploaded_file_from_disk(client):
         assert download_response.content == expected_content
 
     with allure.step("Delete uploaded file"):
-        delete_response = client.delete_resource(
-            path=disk_file_path,
-            permanently=True
-        )
+        delete_response = client.delete_resource(path=disk_file_path, permanently=True)
 
         assert_status_code(delete_response, 204)

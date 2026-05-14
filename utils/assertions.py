@@ -10,28 +10,24 @@ def attach_response(response):
     allure.attach(
         str(response.status_code),
         name="Response status",
-        attachment_type=allure.attachment_type.TEXT
+        attachment_type=allure.attachment_type.TEXT,
     )
 
     allure.attach(
         response.request.url,
         name="Request URL",
-        attachment_type=allure.attachment_type.TEXT
+        attachment_type=allure.attachment_type.TEXT,
     )
 
     allure.attach(
         response.request.method,
         name="Request method",
-        attachment_type=allure.attachment_type.TEXT
+        attachment_type=allure.attachment_type.TEXT,
     )
 
     if response.text:
         try:
-            body = json.dumps(
-                response.json(),
-                indent=4,
-                ensure_ascii=False
-            )
+            body = json.dumps(response.json(), indent=4, ensure_ascii=False)
             attachment_type = allure.attachment_type.JSON
         except ValueError:
             body = response.text
@@ -40,11 +36,7 @@ def attach_response(response):
         body = "Empty response body"
         attachment_type = allure.attachment_type.TEXT
 
-    allure.attach(
-        body,
-        name="Response body",
-        attachment_type=attachment_type
-    )
+    allure.attach(body, name="Response body", attachment_type=attachment_type)
 
 
 def assert_status_code(response, expected_status):
@@ -66,7 +58,7 @@ def assert_schema(body, schema):
     allure.attach(
         str(body),
         name="JSON Body For Schema Validation",
-        attachment_type=allure.attachment_type.JSON
+        attachment_type=allure.attachment_type.JSON,
     )
 
     validate(instance=body, schema=schema)
@@ -89,9 +81,9 @@ def assert_field_value(body, field, expected_value):
     """Assert that a specific field in the response body has the expected value."""
     assert field in body, f"Field '{field}' not found in response body"
     actual = body[field]
-    assert actual == expected_value, (
-        f"Field '{field}': expected {expected_value!r}, got {actual!r}"
-    )
+    assert (
+        actual == expected_value
+    ), f"Field '{field}': expected {expected_value!r}, got {actual!r}"
 
 
 def assert_field_type(body, field, expected_type):

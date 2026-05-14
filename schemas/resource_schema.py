@@ -1,77 +1,30 @@
 RESOURCE_SCHEMA = {
     "type": "object",
-    "required": [
-        "name",
-        "path",
-        "type",
-        "created",
-        "modified"
-    ],
+    "required": ["name", "path", "type", "created", "modified"],
     "properties": {
-        "name": {
-            "type": "string",
-            "minLength": 1
-        },
-        "path": {
-            "type": "string",
-            "minLength": 1
-        },
-        "type": {
-            "type": "string",
-            "enum": ["dir", "file"]
-        },
-        "created": {
-            "type": "string",
-            "format": "date-time"
-        },
-        "modified": {
-            "type": "string",
-            "format": "date-time"
-        },
-        "resource_id": {
-            "type": "string"
-        },
-        "revision": {
-            "type": "integer"
-        },
-        "antivirus_status": {
-            "type": "string"
-        },
-        "public_key": {
-            "type": "string"
-        },
-        "public_url": {
-            "type": "string"
-        },
-        "origin_path": {
-            "type": "string"
-        },
-        "custom_properties": {
-            "type": "object"
-        },
+        "name": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "type": {"type": "string", "enum": ["dir", "file"]},
+        "created": {"type": "string", "format": "date-time"},
+        "modified": {"type": "string", "format": "date-time"},
+        "resource_id": {"type": "string"},
+        "revision": {"type": "integer"},
+        "antivirus_status": {"type": "string"},
+        "public_key": {"type": "string"},
+        "public_url": {"type": "string"},
+        "origin_path": {"type": "string"},
+        "custom_properties": {"type": "object"},
         "_embedded": {
             "type": "object",
             "properties": {
-                "items": {
-                    "type": "array"
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "offset": {
-                    "type": "integer"
-                },
-                "path": {
-                    "type": "string"
-                },
-                "sort": {
-                    "type": "string"
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        }
+                "items": {"type": "array"},
+                "limit": {"type": "integer"},
+                "offset": {"type": "integer"},
+                "path": {"type": "string"},
+                "sort": {"type": "string"},
+                "total": {"type": "integer"},
+            },
+        },
     },
-    "additionalProperties": True
+    "additionalProperties": True,
 }

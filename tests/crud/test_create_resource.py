@@ -2,12 +2,7 @@ import allure
 import pytest
 
 from schemas.link_schema import LINK_SCHEMA
-from utils.assertions import (
-    assert_status_code,
-    assert_json_has_keys,
-    assert_schema
-)
-
+from utils.assertions import assert_status_code, assert_json_has_keys, assert_schema
 
 pytestmark = pytest.mark.crud
 
@@ -44,10 +39,7 @@ def test_create_folder_returns_link_body(client, unique_folder_name, created_fol
 @allure.title("Should create folder with fields filter")
 def test_create_folder_with_fields_filter(client, unique_folder_name, created_folders):
     with allure.step("Create folder with fields filter"):
-        response = client.create_folder(
-            path=unique_folder_name,
-            fields="href,method"
-        )
+        response = client.create_folder(path=unique_folder_name, fields="href,method")
         body = response.json()
 
         created_folders.append(unique_folder_name)
@@ -66,7 +58,9 @@ def test_create_folder_with_fields_filter(client, unique_folder_name, created_fo
 @allure.feature("Resource CRUD")
 @allure.story("Create folder")
 @allure.title("Should create nested folder when parent exists")
-def test_create_nested_folder_when_parent_exists(client, unique_folder_name, created_folders):
+def test_create_nested_folder_when_parent_exists(
+    client, unique_folder_name, created_folders
+):
     parent_folder = unique_folder_name
     child_folder = f"{unique_folder_name}/child"
 

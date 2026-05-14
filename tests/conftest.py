@@ -34,6 +34,7 @@ def created_folders(client):
         except Exception as e:
             # Don't let cleanup errors fail the test run
             import warnings
+
             warnings.warn(f"Cleanup failed for folder '{folder}': {e}")
 
 
@@ -49,6 +50,7 @@ def created_files(client):
             client.delete_resource(file_path, permanently=True)
         except Exception as e:
             import warnings
+
             warnings.warn(f"Cleanup failed for file '{file_path}': {e}")
 
 

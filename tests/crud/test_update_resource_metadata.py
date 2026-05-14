@@ -2,11 +2,7 @@ import allure
 import pytest
 
 from schemas.resource_schema import RESOURCE_SCHEMA
-from utils.assertions import (
-    assert_status_code,
-    assert_schema
-)
-
+from utils.assertions import assert_status_code, assert_schema
 
 pytestmark = pytest.mark.crud
 
@@ -15,10 +11,7 @@ pytestmark = pytest.mark.crud
 @allure.story("Update resource metadata")
 @allure.title("Should add custom properties to folder")
 def test_add_custom_properties_to_folder(client, unique_folder_name, created_folders):
-    custom_properties = {
-        "project": "yandex-disk-api-tests",
-        "created_by": "pytest"
-    }
+    custom_properties = {"project": "yandex-disk-api-tests", "created_by": "pytest"}
 
     with allure.step("Create folder"):
         create_response = client.create_folder(unique_folder_name)
@@ -28,8 +21,7 @@ def test_add_custom_properties_to_folder(client, unique_folder_name, created_fol
 
     with allure.step("Add custom properties"):
         patch_response = client.update_resource_custom_properties(
-            path=unique_folder_name,
-            custom_properties=custom_properties
+            path=unique_folder_name, custom_properties=custom_properties
         )
         patch_body = patch_response.json()
 
@@ -62,16 +54,14 @@ def test_update_existing_custom_property(client, unique_folder_name, created_fol
 
     with allure.step("Add initial custom property"):
         response = client.update_resource_custom_properties(
-            path=unique_folder_name,
-            custom_properties={"status": "draft"}
+            path=unique_folder_name, custom_properties={"status": "draft"}
         )
 
         assert_status_code(response, 200)
 
     with allure.step("Update custom property"):
         response = client.update_resource_custom_properties(
-            path=unique_folder_name,
-            custom_properties={"status": "ready"}
+            path=unique_folder_name, custom_properties={"status": "ready"}
         )
         body = response.json()
 
@@ -93,16 +83,14 @@ def test_remove_custom_property(client, unique_folder_name, created_folders):
 
     with allure.step("Add custom property"):
         response = client.update_resource_custom_properties(
-            path=unique_folder_name,
-            custom_properties={"temporary": "true"}
+            path=unique_folder_name, custom_properties={"temporary": "true"}
         )
 
         assert_status_code(response, 200)
 
     with allure.step("Remove custom property"):
         response = client.update_resource_custom_properties(
-            path=unique_folder_name,
-            custom_properties={"temporary": None}
+            path=unique_folder_name, custom_properties={"temporary": None}
         )
         body = response.json()
 

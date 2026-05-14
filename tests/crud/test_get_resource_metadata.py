@@ -2,12 +2,7 @@ import allure
 import pytest
 
 from schemas.resource_schema import RESOURCE_SCHEMA
-from utils.assertions import (
-    assert_status_code,
-    assert_json_has_keys,
-    assert_schema
-)
-
+from utils.assertions import assert_status_code, assert_json_has_keys, assert_schema
 
 pytestmark = pytest.mark.crud
 
@@ -38,10 +33,7 @@ def test_get_created_folder_metadata(client, unique_folder_name, created_folders
         assert body["path"] == f"disk:/{unique_folder_name}"
 
     with allure.step("Validate required fields exist"):
-        assert_json_has_keys(
-            body,
-            ["created", "modified", "resource_id", "_embedded"]
-        )
+        assert_json_has_keys(body, ["created", "modified", "resource_id", "_embedded"])
 
     with allure.step("Validate field types"):
         assert isinstance(body["name"], str)
@@ -73,8 +65,7 @@ def test_get_resource_metadata_with_fields(client, unique_folder_name, created_f
 
     with allure.step("Get metadata with fields filter"):
         response = client.get_resource_metadata(
-            path=unique_folder_name,
-            fields="name,type,path"
+            path=unique_folder_name, fields="name,type,path"
         )
         body = response.json()
 
@@ -94,7 +85,9 @@ def test_get_resource_metadata_with_fields(client, unique_folder_name, created_f
 @allure.feature("Resource CRUD")
 @allure.story("Get resource metadata")
 @allure.title("Should return embedded list with limit and offset")
-def test_get_folder_metadata_with_limit_and_offset(client, unique_folder_name, created_folders):
+def test_get_folder_metadata_with_limit_and_offset(
+    client, unique_folder_name, created_folders
+):
     child_folder_1 = f"{unique_folder_name}/child_1"
     child_folder_2 = f"{unique_folder_name}/child_2"
 
@@ -110,9 +103,7 @@ def test_get_folder_metadata_with_limit_and_offset(client, unique_folder_name, c
 
     with allure.step("Get metadata with limit and offset"):
         response = client.get_resource_metadata(
-            path=unique_folder_name,
-            limit=1,
-            offset=1
+            path=unique_folder_name, limit=1, offset=1
         )
         body = response.json()
 
