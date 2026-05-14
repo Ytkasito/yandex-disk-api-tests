@@ -108,29 +108,29 @@ yandex-disk-api-tests
 │
 ├── .github
 │   └── workflows
-│       └── api-tests.yml
+│       └── api-tests.yml          # CI/CD пайплайн GitHub Actions
 │
-├── schemas
+├── schemas                        # JSON-схемы API-ответов
 │   ├── disk_info_schema.py
 │   ├── error_schema.py
 │   ├── link_schema.py
 │   ├── operation_schema.py
 │   └── resource_schema.py
 │
-├── test_data
+├── test_data                      # Тестовые файлы
 │   └── hello.txt
 │
 ├── tests
-│   ├── conftest.py
+│   ├── conftest.py                # Фикстуры и общая конфигурация
 │   │
-│   ├── crud
+│   ├── crud                       # CRUD-сценарии
 │   │   ├── test_create_resource.py
 │   │   ├── test_delete_resource.py
 │   │   ├── test_get_disk_info.py
 │   │   ├── test_get_resource_metadata.py
 │   │   └── test_update_resource_metadata.py
 │   │
-│   ├── lifecycle
+│   ├── lifecycle                  # Жизненный цикл ресурсов
 │   │   ├── test_copy_resource.py
 │   │   ├── test_download_file.py
 │   │   ├── test_move_resource.py
@@ -138,13 +138,13 @@ yandex-disk-api-tests
 │   │   ├── test_restore_from_trash.py
 │   │   └── test_upload_file.py
 │   │
-│   └── negative
+│   └── negative                   # Негативные сценарии
 │       └── test_resource_negative_cases.py
 │
 ├── utils
-│   ├── assertions.py
-│   ├── client.py
-│   └── logger.py
+│   ├── assertions.py              # Кастомные проверки
+│   ├── client.py                  # API-клиент Яндекс.Диска
+│   └── logger.py                  # Логирование запросов
 │
 ├── .env.example
 ├── .gitignore
