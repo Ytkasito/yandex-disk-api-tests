@@ -13,6 +13,8 @@
 [![Requests](https://img.shields.io/badge/Requests-HTTP_Client-black)](https://requests.readthedocs.io/)
 [![Allure](https://img.shields.io/badge/Allure-2.16.0-orange)](https://allurereport.org/)
 [![CI](https://github.com/Ytkasito/yandex-disk-api-tests/actions/workflows/api-tests.yml/badge.svg)](https://github.com/Ytkasito/yandex-disk-api-tests/actions/workflows/api-tests.yml)
+![Ruff](https://img.shields.io/badge/linter-ruff-red)
+![Black](https://img.shields.io/badge/code%20style-black-000000)
 
 </div>
 
@@ -20,7 +22,7 @@
 
 # Live Allure Report
 
-https://ytkasito.github.io/yandex-disk-api-tests/
+[Open Allure Report](https://ytkasito.github.io/yandex-disk-api-tests/)
 
 ---
 
@@ -98,6 +100,8 @@ https://ytkasito.github.io/yandex-disk-api-tests/
 | python-dotenv | Работа с переменными окружения |
 | GitHub Actions | CI/CD пайплайн |
 | GitHub Pages | Публикация Allure Report |
+| Ruff | Линтинг и проверка качества кода |
+| Black | Автоматическое форматирование кода |
 
 ---
 
@@ -248,6 +252,22 @@ pytest -m negative
 
 ---
 
+# Code Quality
+
+## Ruff
+
+```bash
+ruff check .
+ruff check . --fix
+```
+
+## Black
+
+```bash
+black .
+black --check .
+```
+
 # CI/CD
 
 Проект автоматически запускает тесты через GitHub Actions.
@@ -255,9 +275,11 @@ pytest -m negative
 Pipeline выполняет:
 
 1. Установку зависимостей
-2. Запуск тестов
-3. Генерацию Allure Report
-4. Публикацию отчёта на GitHub Pages
+2. Проверку кода через Ruff
+3. Проверку форматирования Black
+4. Запуск тестов
+5. Генерацию Allure Report
+6. Публикацию отчёта на GitHub Pages
 
 Workflow запускается:
 

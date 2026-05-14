@@ -43,6 +43,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Run Ruff
+        run: ruff check .
+
+      - name: Run Black check
+        run: black --check .
+
+      - name: Install Allure CLI
+        run: npm install -g allure-commandline
+
       - name: Install Allure CLI
         run: npm install -g allure-commandline
 
