@@ -1,3 +1,5 @@
+<div align="center">
+
 # Автотесты REST API Яндекс.Диска
 
 <div align="center">
@@ -151,6 +153,7 @@ yandex-disk-api-tests
 ├── pytest.ini
 ├── requirements.txt
 └── README.md
+```
 
 ---
 
@@ -299,20 +302,6 @@ Settings → Secrets and variables → Actions → New repository secret
 
 ---
 
-# Возможные улучшения
-
-Потенциальные направления развития проекта:
-
-- интеграция с Docker
-- параллельный запуск тестов через pytest-xdist
-- генерация тестовых данных через Faker
-- retry-механизмы
-- contract testing
-- интеграция с TestRail
-- parametrized testing
-- нагрузочное API-тестирование
-
----
 
 # Автор
 
