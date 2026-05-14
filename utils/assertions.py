@@ -74,3 +74,44 @@ def assert_schema(body, schema):
 
 def assert_error_response(body):
     assert_schema(body, ERROR_SCHEMA)
+
+
+def assert_response_time(response, max_seconds=5.0):
+    """Assert that the response was received within the time limit."""
+    elapsed = response.elapsed.total_seconds()
+    assert elapsed <= max_seconds, (
+        f"Response took {elapsed:.2f}s, expected <= {max_seconds}s. "
+        f"URL: {response.url}"
+    )
+
+
+def assert_field_value(body, field, expected_value):
+    """Assert that a specific field in the response body has the expected value."""
+    assert field in body, f"Field '{field}' not found in response body"
+    actual = body[field]
+    assert actual == expected_value, (
+        f"Field '{field}': expected {expected_value!r}, got {actual!r}"
+    )
+
+
+def assert_field_type(body, field, expected_type):
+    """Assert that a specific field in the response body is of the expected type."""
+    assert field in body, f"Field '{field}' not found in response body"
+    actual = body[field]
+    assert isinstance(actual, expected_type), (
+        f"Field '{field}': expected type {expected_type.__name__}, "
+        f"got {type(actual).__name__}"
+    )
+
+
+def assert_json_keys_only(body, expected_keys):
+    """Assert that the response body contains exactly the expected keys, no more, no less."""
+    actual_keys = set(body.keys())
+    expected = set(expected_keys)
+    assert actual_keys == expected, (
+        f"Response body keys mismatch.\n"
+        f"Expected: {sorted(expected)}\n"
+        f"Actual:   {sorted(actual_keys)}\n"
+        f"Extra: {sorted(actual_keys - expected)}\n"
+        f"Missing: {sorted(expected - actual_keys)}"
+    )

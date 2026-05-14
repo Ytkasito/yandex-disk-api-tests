@@ -9,26 +9,69 @@ RESOURCE_SCHEMA = {
     ],
     "properties": {
         "name": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
         },
         "path": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
         },
         "type": {
             "type": "string",
             "enum": ["dir", "file"]
         },
         "created": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
         },
         "modified": {
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
         },
         "resource_id": {
             "type": "string"
         },
-        "_embedded": {
+        "revision": {
+            "type": "integer"
+        },
+        "antivirus_status": {
+            "type": "string"
+        },
+        "public_key": {
+            "type": "string"
+        },
+        "public_url": {
+            "type": "string"
+        },
+        "origin_path": {
+            "type": "string"
+        },
+        "custom_properties": {
             "type": "object"
+        },
+        "_embedded": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array"
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "sort": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
         }
-    }
+    },
+    "additionalProperties": True
 }

@@ -6,7 +6,9 @@ import requests
 
 from utils.assertions import (
     assert_status_code,
-    assert_error_response
+    assert_error_response,
+    assert_field_value,
+    assert_response_time,
 )
 
 
@@ -33,8 +35,7 @@ def test_should_return_409_when_creating_existing_folder(
         assert_status_code(first_response, 201)
         assert_status_code(second_response, 409)
         assert_error_response(body)
-
-        assert body["error"] == "DiskPathPointsToExistentDirectoryError"
+        assert_field_value(body, "error", "DiskPathPointsToExistentDirectoryError")
 
 
 @allure.feature("Negative API scenarios")
@@ -48,8 +49,7 @@ def test_should_return_404_for_non_existing_resource(client):
     with allure.step("Check not found response"):
         assert_status_code(response, 404)
         assert_error_response(body)
-
-        assert body["error"] == "DiskNotFoundError"
+        assert_field_value(body, "error", "DiskNotFoundError")
 
 
 @allure.feature("Negative API scenarios")
@@ -65,8 +65,26 @@ def test_should_return_401_without_oauth_token():
     with allure.step("Check unauthorized response"):
         assert_status_code(response, 401)
         assert_error_response(body)
+        assert_field_value(body, "error", "UnauthorizedError")
 
-        assert body["error"] == "UnauthorizedError"
+
+@allure.feature("Negative API scenarios")
+@allure.story("Unauthorized request")
+@allure.title("Should return 401 with an invalid OAuth token")
+def test_should_return_401_with_invalid_oauth_token():
+    base_url = os.getenv("BASE_URL", "https://cloud-api.yandex.net")
+
+    with allure.step("Send request with invalid Authorization header"):
+        response = requests.get(
+            f"{base_url}/v1/disk",
+            headers={"Authorization": "OAuth invalid_token_12345"},
+            timeout=10
+        )
+        body = response.json()
+
+    with allure.step("Check unauthorized response"):
+        assert_status_code(response, 401)
+        assert_error_response(body)
 
 
 @allure.feature("Resource negative cases")
@@ -95,8 +113,7 @@ def test_should_return_409_when_parent_folder_does_not_exist(client, unique_fold
     with allure.step("Validate path does not exist response"):
         assert_status_code(response, 409)
         assert_error_response(body)
-
-        assert body["error"] == "DiskPathDoesntExistsError"
+        assert_field_value(body, "error", "DiskPathDoesntExistsError")
 
 
 @allure.feature("Resource negative cases")
@@ -120,18 +137,12 @@ def test_should_return_404_when_deleting_nonexistent_resource(client, unique_fol
 @allure.title("Should return 400 when deleting folder with md5 parameter")
 def test_should_return_400_when_deleting_folder_with_md5(
         client,
-        unique_folder_name,
+        existing_folder,
         created_folders
 ):
-    with allure.step("Create folder"):
-        create_response = client.create_folder(unique_folder_name)
-        created_folders.append(unique_folder_name)
-
-        assert_status_code(create_response, 201)
-
     with allure.step("Try to delete folder with md5"):
         response = client.delete_resource(
-            path=unique_folder_name,
+            path=existing_folder,
             md5="fake-md5",
             permanently=True
         )
@@ -140,3 +151,15 @@ def test_should_return_400_when_deleting_folder_with_md5(
     with allure.step("Validate bad request response"):
         assert_status_code(response, 400)
         assert_error_response(body)
+
+
+@allure.feature("Resource negative cases")
+@allure.story("Response time")
+@allure.title("Disk info endpoint should respond within 5 seconds")
+def test_disk_info_response_time(client):
+    with allure.step("Request disk info"):
+        response = client.get_disk_info()
+
+    with allure.step("Validate response time"):
+        assert_status_code(response, 200)
+        assert_response_time(response, max_seconds=5.0)
